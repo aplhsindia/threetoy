@@ -47454,4 +47454,4 @@ function index(params) {
 }
 
 export { index$2 as butterfliesBackground, index as fishesBackground, index$5 as neonCursor, index$3 as noisyLinesBackground, index$4 as particlesCursor, index$1 as swarmBackground };
-//# sourceMappingURL=threejs-toys.module.cdn.js.map
+//# sourceMappingURL=threejs.module.cdn.js.map

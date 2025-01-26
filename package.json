@@ -21,7 +21,7 @@
     "vite": "^2.9.1",
     "vite-plugin-string": "^1.1.2"
   },
-  "module": "build/threejs-toys.module.js",
+  "module": "build/threejs.module.js",
   "repository": {
     "type": "git",
     "url": "git+https://gitlab.com/aplhsindia-projects/threetoy.git"

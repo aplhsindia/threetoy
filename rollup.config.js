@@ -42,8 +42,8 @@ const external = [
 ]
 
 export default [
-  createConfig('es', 'build/threejs-toys.module.js', external, [], false),
-  createConfig('es', 'build/threejs-toys.module.min.js', external, [], true),
-  createConfig('es', 'build/threejs-toys.module.cdn.js', [threeCdn], [nodeResolve(), replace(cdnReplaces)], false),
-  createConfig('es', 'build/threejs-toys.module.cdn.min.js', [threeCdn], [nodeResolve(), replace(cdnReplaces)], true)
+  createConfig('es', 'build/threejs.module.js', external, [], false),
+  createConfig('es', 'build/threejs.module.min.js', external, [], true),
+  createConfig('es', 'build/threejs.module.cdn.js', [threeCdn], [nodeResolve(), replace(cdnReplaces)], false),
+  createConfig('es', 'build/threejs.module.cdn.min.js', [threeCdn], [nodeResolve(), replace(cdnReplaces)], true)
 ]
