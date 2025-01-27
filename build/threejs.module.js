@@ -1,4 +1,4 @@
-import { Vector2, WebGLRenderer, PerspectiveCamera, Scene, PointLight, DirectionalLight, AmbientLight, SplineCurve, Vector3, Color, OrthographicCamera, PlaneGeometry, ShaderMaterial, Mesh, BackSide, SphereGeometry, HalfFloatType, BufferGeometry, BufferAttribute, AdditiveBlending, Points, MathUtils, CanvasTexture, InstancedBufferAttribute, DoubleSide, TextureLoader, MeshBasicMaterial, MeshPhongMaterial, MeshStandardMaterial, InstancedMesh, OctahedronGeometry, ConeGeometry, CapsuleGeometry, BoxGeometry, Float32BufferAttribute, FogExp2 } from 'three';
+import { Vector2, WebGLRenderer, PerspectiveCamera, Scene, PointLight, DirectionalLight, AmbientLight, SplineCurve, Vector3, Color, OrthographicCamera, PlaneGeometry, ShaderMaterial, Mesh, HalfFloatType, BufferGeometry, BufferAttribute, AdditiveBlending, Points, MathUtils, CanvasTexture, InstancedBufferAttribute, DoubleSide, TextureLoader, MeshBasicMaterial, MeshPhongMaterial, MeshStandardMaterial, InstancedMesh, SphereGeometry, OctahedronGeometry, ConeGeometry, CapsuleGeometry, BoxGeometry, Float32BufferAttribute, FogExp2 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GPUComputationRenderer } from 'three/examples/jsm/misc/GPUComputationRenderer.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
@@ -536,56 +536,24 @@ function index$4(params) {
   const uMouse = { value: new Vector2() };
   const uMouseDirection = { value: new Vector2() };
   const uniforms = { uTime, uCoordScale, uNoiseIntensity, uPointSize, uPointDecay, uColor, uMouse, uMouseDirection };
-  let geometry, material, mesh, gradientMaterial;
+  let geometry, material, mesh;
   let hover = config.hover;
   const mouseTarget = new Vector2();
-  if (config.centerColor !== void 0 && config.edgeColor !== void 0) {
-    gradientMaterial = new ShaderMaterial({
-      uniforms: {
-        centerColor: { value: new Color(config.centerColor) },
-        edgeColor: { value: new Color(config.edgeColor) }
-      },
-      vertexShader: `
-        varying vec3 vWorldPosition;
-        void main() {
-          vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-          vWorldPosition = worldPosition.xyz;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-    `,
-      fragmentShader: `
-        uniform vec3 centerColor;
-        uniform vec3 edgeColor;
-        varying vec3 vWorldPosition;
-        void main() {
-          float distance = length(vWorldPosition);
-          float t = smoothstep(0.0, 1.0, distance);
-          vec3 color = mix(centerColor, edgeColor, t);
-          gl_FragColor = vec4(color, 1.0);
-        }
-    `,
-      side: BackSide,
-      depthWrite: false,
-      depthTest: false
-    });
-  }
   var mindex = 0;
   const changes = config.position;
   let mchange = { x: 0, y: 0 };
   three({
     ...commonConfig(params),
+    alpha: true,
+    // Enable transparency for the renderer
     antialias: false,
     initRenderer({ renderer }) {
+      renderer.setClearColor(0, 0);
       initGPU(renderer);
     },
     initScene({ scene }) {
-      const radius = 1e3;
-      const segments = 32;
-      const geometry2 = new SphereGeometry(radius, segments, segments);
-      const backgroundMesh = new Mesh(geometry2, gradientMaterial);
-      backgroundMesh.position.set(0, 0, 0);
-      scene.add(backgroundMesh);
       initParticles();
+      scene.background = null;
       scene.add(mesh);
     },
     beforeRender({ width, wWidth, wHeight, clock, pointer }) {

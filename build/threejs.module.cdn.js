@@ -1,4 +1,4 @@
-import { EventDispatcher as EventDispatcher$1, Vector3 as Vector3$1, MOUSE, TOUCH, Quaternion as Quaternion$1, Spherical, Vector2 as Vector2$1, WebGLRenderer as WebGLRenderer$1, PerspectiveCamera as PerspectiveCamera$1, Scene as Scene$1, PointLight as PointLight$1, DirectionalLight as DirectionalLight$1, AmbientLight as AmbientLight$1, SplineCurve as SplineCurve$1, Color as Color$1, OrthographicCamera as OrthographicCamera$1, PlaneGeometry as PlaneGeometry$1, ShaderMaterial as ShaderMaterial$1, Mesh as Mesh$1, Camera as Camera$1, WebGLRenderTarget as WebGLRenderTarget$1, RGBAFormat as RGBAFormat$1, DataTexture as DataTexture$1, FloatType as FloatType$1, NearestFilter as NearestFilter$1, ClampToEdgeWrapping as ClampToEdgeWrapping$1, CanvasTexture as CanvasTexture$1, HalfFloatType as HalfFloatType$1, InstancedBufferAttribute as InstancedBufferAttribute$1, DoubleSide as DoubleSide$1, TextureLoader as TextureLoader$1, MeshBasicMaterial as MeshBasicMaterial$1, MeshPhongMaterial as MeshPhongMaterial$1, MeshStandardMaterial as MeshStandardMaterial$1, InstancedMesh as InstancedMesh$1, MathUtils as MathUtils$1, BufferGeometry as BufferGeometry$1, Float32BufferAttribute as Float32BufferAttribute$1, UniformsUtils as UniformsUtils$1, Clock, AdditiveBlending as AdditiveBlending$1, SphereGeometry as SphereGeometry$1, OctahedronGeometry, ConeGeometry, CapsuleGeometry, BoxGeometry as BoxGeometry$1, FogExp2 } from 'https://unpkg.com/three@0.140.0/build/three.module.js';
+import { EventDispatcher as EventDispatcher$1, Vector3 as Vector3$1, MOUSE, TOUCH, Quaternion as Quaternion$1, Spherical, Vector2 as Vector2$1, WebGLRenderer as WebGLRenderer$1, PerspectiveCamera as PerspectiveCamera$1, Scene as Scene$1, PointLight as PointLight$1, DirectionalLight as DirectionalLight$1, AmbientLight as AmbientLight$1, SplineCurve as SplineCurve$1, Color as Color$1, OrthographicCamera as OrthographicCamera$1, PlaneGeometry as PlaneGeometry$1, ShaderMaterial as ShaderMaterial$1, Mesh as Mesh$1, Camera as Camera$1, WebGLRenderTarget as WebGLRenderTarget$1, RGBAFormat as RGBAFormat$1, DataTexture as DataTexture$1, FloatType as FloatType$1, NearestFilter as NearestFilter$1, ClampToEdgeWrapping as ClampToEdgeWrapping$1, CanvasTexture as CanvasTexture$1, HalfFloatType as HalfFloatType$1, InstancedBufferAttribute as InstancedBufferAttribute$1, DoubleSide as DoubleSide$1, TextureLoader as TextureLoader$1, MeshBasicMaterial as MeshBasicMaterial$1, MeshPhongMaterial as MeshPhongMaterial$1, MeshStandardMaterial as MeshStandardMaterial$1, InstancedMesh as InstancedMesh$1, MathUtils as MathUtils$1, BufferGeometry as BufferGeometry$1, Float32BufferAttribute as Float32BufferAttribute$1, UniformsUtils as UniformsUtils$1, Clock, AdditiveBlending as AdditiveBlending$1, SphereGeometry, OctahedronGeometry, ConeGeometry, CapsuleGeometry, BoxGeometry as BoxGeometry$1, FogExp2 } from 'https://unpkg.com/three@0.140.0/build/three.module.js';
 
 // This set of controls performs orbiting, dollying (zooming), and panning.
 // Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
@@ -35341,127 +35341,6 @@ function toJSON( shapes, data ) {
 
 }
 
-class SphereGeometry extends BufferGeometry {
-
-	constructor( radius = 1, widthSegments = 32, heightSegments = 16, phiStart = 0, phiLength = Math.PI * 2, thetaStart = 0, thetaLength = Math.PI ) {
-
-		super();
-		this.type = 'SphereGeometry';
-
-		this.parameters = {
-			radius: radius,
-			widthSegments: widthSegments,
-			heightSegments: heightSegments,
-			phiStart: phiStart,
-			phiLength: phiLength,
-			thetaStart: thetaStart,
-			thetaLength: thetaLength
-		};
-
-		widthSegments = Math.max( 3, Math.floor( widthSegments ) );
-		heightSegments = Math.max( 2, Math.floor( heightSegments ) );
-
-		const thetaEnd = Math.min( thetaStart + thetaLength, Math.PI );
-
-		let index = 0;
-		const grid = [];
-
-		const vertex = new Vector3();
-		const normal = new Vector3();
-
-		// buffers
-
-		const indices = [];
-		const vertices = [];
-		const normals = [];
-		const uvs = [];
-
-		// generate vertices, normals and uvs
-
-		for ( let iy = 0; iy <= heightSegments; iy ++ ) {
-
-			const verticesRow = [];
-
-			const v = iy / heightSegments;
-
-			// special case for the poles
-
-			let uOffset = 0;
-
-			if ( iy == 0 && thetaStart == 0 ) {
-
-				uOffset = 0.5 / widthSegments;
-
-			} else if ( iy == heightSegments && thetaEnd == Math.PI ) {
-
-				uOffset = - 0.5 / widthSegments;
-
-			}
-
-			for ( let ix = 0; ix <= widthSegments; ix ++ ) {
-
-				const u = ix / widthSegments;
-
-				// vertex
-
-				vertex.x = - radius * Math.cos( phiStart + u * phiLength ) * Math.sin( thetaStart + v * thetaLength );
-				vertex.y = radius * Math.cos( thetaStart + v * thetaLength );
-				vertex.z = radius * Math.sin( phiStart + u * phiLength ) * Math.sin( thetaStart + v * thetaLength );
-
-				vertices.push( vertex.x, vertex.y, vertex.z );
-
-				// normal
-
-				normal.copy( vertex ).normalize();
-				normals.push( normal.x, normal.y, normal.z );
-
-				// uv
-
-				uvs.push( u + uOffset, 1 - v );
-
-				verticesRow.push( index ++ );
-
-			}
-
-			grid.push( verticesRow );
-
-		}
-
-		// indices
-
-		for ( let iy = 0; iy < heightSegments; iy ++ ) {
-
-			for ( let ix = 0; ix < widthSegments; ix ++ ) {
-
-				const a = grid[ iy ][ ix + 1 ];
-				const b = grid[ iy ][ ix ];
-				const c = grid[ iy + 1 ][ ix ];
-				const d = grid[ iy + 1 ][ ix + 1 ];
-
-				if ( iy !== 0 || thetaStart > 0 ) indices.push( a, b, d );
-				if ( iy !== heightSegments - 1 || thetaEnd < Math.PI ) indices.push( b, c, d );
-
-			}
-
-		}
-
-		// build geometry
-
-		this.setIndex( indices );
-		this.setAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) );
-		this.setAttribute( 'normal', new Float32BufferAttribute( normals, 3 ) );
-		this.setAttribute( 'uv', new Float32BufferAttribute( uvs, 2 ) );
-
-	}
-
-	static fromJSON( data ) {
-
-		return new SphereGeometry( data.radius, data.widthSegments, data.heightSegments, data.phiStart, data.phiLength, data.thetaStart, data.thetaLength );
-
-	}
-
-}
-
 class ShadowMaterial extends Material {
 
 	constructor( parameters ) {
@@ -45184,56 +45063,24 @@ function index$4(params) {
   const uMouse = { value: new Vector2() };
   const uMouseDirection = { value: new Vector2() };
   const uniforms = { uTime, uCoordScale, uNoiseIntensity, uPointSize, uPointDecay, uColor, uMouse, uMouseDirection };
-  let geometry, material, mesh, gradientMaterial;
+  let geometry, material, mesh;
   let hover = config.hover;
   const mouseTarget = new Vector2();
-  if (config.centerColor !== void 0 && config.edgeColor !== void 0) {
-    gradientMaterial = new ShaderMaterial({
-      uniforms: {
-        centerColor: { value: new Color(config.centerColor) },
-        edgeColor: { value: new Color(config.edgeColor) }
-      },
-      vertexShader: `
-        varying vec3 vWorldPosition;
-        void main() {
-          vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-          vWorldPosition = worldPosition.xyz;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-    `,
-      fragmentShader: `
-        uniform vec3 centerColor;
-        uniform vec3 edgeColor;
-        varying vec3 vWorldPosition;
-        void main() {
-          float distance = length(vWorldPosition);
-          float t = smoothstep(0.0, 1.0, distance);
-          vec3 color = mix(centerColor, edgeColor, t);
-          gl_FragColor = vec4(color, 1.0);
-        }
-    `,
-      side: BackSide,
-      depthWrite: false,
-      depthTest: false
-    });
-  }
   var mindex = 0;
   const changes = config.position;
   let mchange = { x: 0, y: 0 };
   three({
     ...commonConfig(params),
+    alpha: true,
+    // Enable transparency for the renderer
     antialias: false,
     initRenderer({ renderer }) {
+      renderer.setClearColor(0, 0);
       initGPU(renderer);
     },
     initScene({ scene }) {
-      const radius = 1e3;
-      const segments = 32;
-      const geometry2 = new SphereGeometry(radius, segments, segments);
-      const backgroundMesh = new Mesh(geometry2, gradientMaterial);
-      backgroundMesh.position.set(0, 0, 0);
-      scene.add(backgroundMesh);
       initParticles();
+      scene.background = null;
       scene.add(mesh);
     },
     beforeRender({ width, wWidth, wHeight, clock, pointer }) {
@@ -47059,7 +46906,7 @@ function index$1(params) {
         geometry = new OctahedronGeometry(1, 0).rotateX(Math.PI / 2);
         break;
       case "sphere":
-        geometry = new SphereGeometry$1(0.5, 8, 8);
+        geometry = new SphereGeometry(0.5, 8, 8);
         break;
       default:
         geometry = customGeometry(1);
