@@ -16,7 +16,7 @@
     "rollup": "^2.71.1",
     "rollup-plugin-esbuild": "^4.9.1",
     "rollup-plugin-glsl": "^1.3.0",
-    "three": "^0.140.0",
+    "three": "github:aplhsindia/threejs",
     "tweakpane": "^3.0.8",
     "vite": "^2.9.1",
     "vite-plugin-string": "^1.1.2"

@@ -153,10 +153,10 @@ export default function (params) {
      */
     function initGPU(renderer) {
         gpu = new GPUComputationRenderer(WIDTH, WIDTH, renderer);
-        if (!renderer.capabilities.isWebGL2) {
+      /*  if (!renderer.capabilities.isWebGL2) {
             gpu.setDataType(HalfFloatType);
         }
-
+*/
         dtPosition = gpu.createTexture();
         dtVelocity = gpu.createTexture();
         initTextures(dtPosition, dtVelocity);

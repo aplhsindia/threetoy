@@ -1,4 +1,4 @@
-import { Vector2, WebGLRenderer, PerspectiveCamera, Scene, PointLight, DirectionalLight, AmbientLight, SplineCurve, Vector3, Color, OrthographicCamera, PlaneGeometry, ShaderMaterial, Mesh, HalfFloatType, BufferGeometry, BufferAttribute, AdditiveBlending, Points, MathUtils, CanvasTexture, InstancedBufferAttribute, DoubleSide, TextureLoader, MeshBasicMaterial, MeshPhongMaterial, MeshStandardMaterial, InstancedMesh, SphereGeometry, OctahedronGeometry, ConeGeometry, CapsuleGeometry, BoxGeometry, Float32BufferAttribute, FogExp2 } from 'three';
+import { Vector2, WebGLRenderer, PerspectiveCamera, Scene, PointLight, DirectionalLight, AmbientLight, SplineCurve, Vector3, Color, OrthographicCamera, PlaneGeometry, ShaderMaterial, Mesh, BufferGeometry, BufferAttribute, AdditiveBlending, Points, MathUtils, CanvasTexture, HalfFloatType, InstancedBufferAttribute, DoubleSide, TextureLoader, MeshBasicMaterial, MeshPhongMaterial, MeshStandardMaterial, InstancedMesh, SphereGeometry, OctahedronGeometry, ConeGeometry, CapsuleGeometry, BoxGeometry, Float32BufferAttribute, FogExp2 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GPUComputationRenderer } from 'three/examples/jsm/misc/GPUComputationRenderer.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
@@ -600,9 +600,6 @@ function index$4(params) {
   return { config, uniforms };
   function initGPU(renderer) {
     gpu = new GPUComputationRenderer(WIDTH, WIDTH, renderer);
-    if (!renderer.capabilities.isWebGL2) {
-      gpu.setDataType(HalfFloatType);
-    }
     dtPosition = gpu.createTexture();
     dtVelocity = gpu.createTexture();
     initTextures(dtPosition, dtVelocity);
