@@ -33,6 +33,6 @@ import particlesCursor from './src/cursors/particles'
             { x: 0, y: 30, time: 5000 },   // Change x to 50 and y to 20 after 1 second
             { x: 0, y: -40, time: 5000 }   // Change x to 100 and y to 30 after 1 second
         ],
-        hover: 0
+        hover: 1
     })
 })()

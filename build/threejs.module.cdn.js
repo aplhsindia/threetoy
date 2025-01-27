@@ -1214,7 +1214,7 @@ class OrbitControls extends EventDispatcher$1 {
 
 }
 
-function pointer$1(params) {
+function pointer(params) {
   const {
     domElement,
     onClick = () => {
@@ -1404,7 +1404,7 @@ function three(params) {
       pointerOptions.onLeave = options.onPointerLeave;
     }
     if (Object.keys(pointerOptions).length > 0) {
-      three.pointer = pointer$1({ domElement: (_b = options.eventsEl) != null ? _b : (_a = options.el) != null ? _a : options.canvas, ...pointerOptions });
+      three.pointer = pointer({ domElement: (_b = options.eventsEl) != null ? _b : (_a = options.el) != null ? _a : options.canvas, ...pointerOptions });
     }
   }
   function animate(timestamp) {
@@ -45236,7 +45236,7 @@ function index$4(params) {
       initParticles();
       scene.add(mesh);
     },
-    beforeRender({ width, wWidth, wHeight, clock }) {
+    beforeRender({ width, wWidth, wHeight, clock, pointer }) {
       var _a, _b;
       if (!hover) {
         mouseTarget.x = (_a = mchange.x) != null ? _a : 0;

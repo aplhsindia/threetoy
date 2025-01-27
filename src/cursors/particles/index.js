@@ -121,7 +121,7 @@ export default function (params) {
             scene.add(mesh);
 
         },
-        beforeRender({width, wWidth, wHeight, clock}) {
+        beforeRender({width, wWidth, wHeight, clock, pointer}) {
             if (!hover) {
 
                 // Update mouseTarget based on the latest change
