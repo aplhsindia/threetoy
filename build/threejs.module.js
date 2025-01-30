@@ -518,7 +518,7 @@ const defaultConfig$5 = {
   sleepTimeCoefX: 1e-3,
   sleepTimeCoefY: 2e-3,
   hover: 0,
-  position: [{ x: 0, y: 0, time: 1e3 }]
+  position: [{ x: 0, y: 0 }]
 };
 function index$4(params) {
   const config = { ...defaultConfig$5, ...params };
@@ -541,7 +541,7 @@ function index$4(params) {
   const mouseTarget = new Vector2();
   var mindex = 0;
   const changes = config.position;
-  let mchange = { x: 0, y: 0 };
+  let mchange = { x: 0, y: -100 };
   three({
     ...commonConfig(params),
     alpha: true,
@@ -573,30 +573,44 @@ function index$4(params) {
     },
     onPointerMove({ delta }) {
       uMouseDirection.value.copy(delta);
+      console.log(delta);
     },
     onPointerLeave() {
+    },
+    onWheel(event) {
     }
   });
-  function mchangef() {
-    if (mindex < changes.length) {
-      const change = changes[mindex];
-      mchange.x = change.x;
-      mchange.y = change.y;
-      setTimeout(() => {
+  window.addEventListener("load", () => {
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    function handleWheel(event) {
+      event.preventDefault();
+      const scrollAmount = event.deltaY;
+      console.log("Scroll amount (deltaY):", scrollAmount);
+      if (scrollAmount > 0) {
+        if (mindex < changes.length - 1) {
+          mindex++;
+        }
+      } else if (scrollAmount < 0) {
+        if (mindex > 0) {
+          mindex--;
+        }
+      }
+      console.log("Current mindex:", mindex);
+      if (mindex >= 0 && mindex < changes.length) {
+        const change = changes[mindex];
+        mchange.x = change.x;
+        mchange.y = change.y;
         console.log(mindex);
-        const event = new MouseEvent("mousemove", {
+        const moveEvent = new MouseEvent("mousemove", {
           clientX: change.x,
           // X position in pixels
           clientY: change.y
           // Y position in pixels
         });
-        document.dispatchEvent(event);
-        mindex++;
-        mchangef();
-      }, change.time);
+        document.dispatchEvent(moveEvent);
+      }
     }
-  }
-  mchangef();
+  });
   return { config, uniforms };
   function initGPU(renderer) {
     gpu = new GPUComputationRenderer(WIDTH, WIDTH, renderer);

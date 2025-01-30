@@ -36,6 +36,7 @@
     "url": "https://gitlab.com/aplhsindia-projects/threetoy/-/issues"
   },
   "dependencies": {
+    "gsap": "^3.12.7",
     "simplex-noise": "^4.0.3"
   }
 }

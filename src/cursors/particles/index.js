@@ -35,7 +35,7 @@ const defaultConfig = {
     sleepTimeCoefX: 0.001,
     sleepTimeCoefY: 0.002,
     hover: 0,
-    position:[{ x: 0, y: 0, time: 1000 }]
+    position:[{ x: 0, y: 0 }]
 };
 
 export default function (params) {
@@ -66,8 +66,7 @@ export default function (params) {
     var mindex = 0;
 
     const changes =  config.position;
-    let mchange = {x:0,y:0}
-
+    let mchange = {x:0,y:-100}
 
 
     three({
@@ -105,46 +104,73 @@ export default function (params) {
             gpu.compute();
             material.uniforms.texturePosition.value = gpu.getCurrentRenderTarget(positionVariable).texture;
             material.uniforms.textureVelocity.value = gpu.getCurrentRenderTarget(velocityVariable).texture;
+            function handleWheel(event) {
+                event.preventDefault(); // Prevents page scroll
+                console.log("Wheel event fired");
+            }
         },
 
         onPointerMove({delta}) {
             //hover = true
             uMouseDirection.value.copy(delta);
+            console.log(delta)
         },
         onPointerLeave() {
             //hover = false
         },
+        onWheel(event) {
+            // Debugging: Check if the event is firing
+
+        }
     });
 
-    function mchangef() {
-        // Ensure the index is within bounds
-        if (mindex < changes.length) {
-            const change = changes[mindex];
-            mchange.x = change.x;
-            mchange.y = change.y;
 
-            // Simulate the mousemove event after the specified delay
-            setTimeout(() => {
+
+    window.addEventListener('load', () => {
+        window.addEventListener('wheel', handleWheel, { passive: false });
+
+
+        function handleWheel(event) {
+            event.preventDefault();  // Prevent the default scroll behavior
+
+            const scrollAmount = event.deltaY;
+            console.log("Scroll amount (deltaY):", scrollAmount);
+
+            if (scrollAmount > 0) {
+                // Scroll down, increment mindex
+                if (mindex < changes.length - 1) {
+                    mindex++;
+                }
+            } else if (scrollAmount < 0) {
+                // Scroll up, decrement mindex
+                if (mindex > 0) {
+                    mindex--;
+                }
+            }
+
+            console.log("Current mindex:", mindex);
+
+            if (mindex >= 0 && mindex < changes.length) {
+                const change = changes[mindex];
+                mchange.x = change.x;
+                mchange.y = change.y;
+
                 console.log(mindex);
 
                 // Simulate a mousemove event at the new pixel coordinates
-                const event = new MouseEvent('mousemove', {
+                const moveEvent = new MouseEvent('mousemove', {
                     clientX: change.x,  // X position in pixels
                     clientY: change.y,  // Y position in pixels
                 });
 
                 // Dispatch the event to simulate the movement
-                document.dispatchEvent(event);
-
-                // Increment the index and recursively call mchangef for the next change
-                mindex++;
-                mchangef(); // Continue processing the next index
-            }, change.time); // Delay based on the `time` value in the `change`
+                document.dispatchEvent(moveEvent);
+            }
         }
-    }
 
+    });
     // Start the mouse movement simulation
-    mchangef();
+
 
 
     return {config, uniforms};
@@ -318,7 +344,6 @@ export default function (params) {
         }
     }
 }
-
 /**
  */
 function commonConfig(params) {
