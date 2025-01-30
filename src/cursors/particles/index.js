@@ -111,9 +111,7 @@ export default function (params) {
         },
 
         onPointerMove({delta}) {
-            //hover = true
             uMouseDirection.value.copy(delta);
-            console.log(delta)
         },
         onPointerLeave() {
             //hover = false
@@ -125,50 +123,46 @@ export default function (params) {
     });
 
 
-
-    window.addEventListener('load', () => {
-        window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('wheel', handleWheel, { passive: false });
 
 
-        function handleWheel(event) {
-            event.preventDefault();  // Prevent the default scroll behavior
+    function handleWheel(event) {
+        event.preventDefault();  // Prevent the default scroll behavior
 
-            const scrollAmount = event.deltaY;
-            console.log("Scroll amount (deltaY):", scrollAmount);
+        const scrollAmount = event.deltaY;
+        console.log("Scroll amount (deltaY):", scrollAmount);
 
-            if (scrollAmount > 0) {
-                // Scroll down, increment mindex
-                if (mindex < changes.length - 1) {
-                    mindex++;
-                }
-            } else if (scrollAmount < 0) {
-                // Scroll up, decrement mindex
-                if (mindex > 0) {
-                    mindex--;
-                }
+        if (scrollAmount > 0) {
+            // Scroll down, increment mindex
+            if (mindex < changes.length - 1) {
+                mindex++;
             }
-
-            console.log("Current mindex:", mindex);
-
-            if (mindex >= 0 && mindex < changes.length) {
-                const change = changes[mindex];
-                mchange.x = change.x;
-                mchange.y = change.y;
-
-                console.log(mindex);
-
-                // Simulate a mousemove event at the new pixel coordinates
-                const moveEvent = new MouseEvent('mousemove', {
-                    clientX: change.x,  // X position in pixels
-                    clientY: change.y,  // Y position in pixels
-                });
-
-                // Dispatch the event to simulate the movement
-                document.dispatchEvent(moveEvent);
+        } else if (scrollAmount < 0) {
+            // Scroll up, decrement mindex
+            if (mindex > 0) {
+                mindex--;
             }
         }
 
-    });
+        console.log("Current mindex:", mindex);
+
+        if (mindex >= 0 && mindex < changes.length) {
+            const change = changes[mindex];
+            mchange.x = change.x;
+            mchange.y = change.y;
+
+            console.log(mindex);
+
+            // Simulate a mousemove event at the new pixel coordinates
+            const moveEvent = new MouseEvent('mousemove', {
+                clientX: change.x,  // X position in pixels
+                clientY: change.y,  // Y position in pixels
+            });
+
+            // Dispatch the event to simulate the movement
+            document.dispatchEvent(moveEvent);
+        }
+    }
     // Start the mouse movement simulation
 
 
